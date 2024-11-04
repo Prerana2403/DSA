@@ -1,5 +1,4 @@
-package Sync;
- class Node {
+class Node {
     int data;
     Node next;
 
@@ -10,7 +9,7 @@ package Sync;
 }
 
 public class SinglyLinkedList {
-    private Node head;
+    Node head;
 
     public void insertAtBeginning(int data) {
         Node newNode = new Node(data);
@@ -22,55 +21,62 @@ public class SinglyLinkedList {
         Node newNode = new Node(data);
         if (head == null) {
             head = newNode;
-            return;
+        } else {
+            Node last = head;
+            while (last.next != null) {
+                last = last.next;
+            }
+            last.next = newNode;
         }
-        Node current = head;
-        while (current.next != null) {
-            current = current.next;
-        }
-        current.next = newNode;
     }
 
-    public void deleteNode(int data) {
-        if (head == null) {
+    public void deleteNode(int key) {
+        Node temp = head, prev = null;
+
+        // If head node itself holds the key to be deleted
+        if (temp != null && temp.data == key) {
+            head = temp.next; // Changed head
             return;
         }
-        if (head.data == data) {
-            head = head.next;
+
+        // Search for the key to be deleted, keep track of the
+        // previous node as we need to change 'prev.next'
+        while (temp != null && temp.data != key) {
+            prev = temp;
+            temp = temp.next;
+        }
+
+        // If key was not present in linked list
+        if (temp == null)
             return;
-        }
-        Node current = head;
-        Node previous = null;
-        while (current != null && current.data != data) {
-            previous = current;
-            current = current.next;
-        }
-        if (current == null) {
-            return;
-        }
-        previous.next = current.next;
+
+        // Unlink the node from linked list
+        prev.next = temp.next;
     }
 
     public void printList() {
-        Node current = head;
-        while (current != null) {
-            System.out.print(current.data + " -> ");
-            current = current.next;
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
         }
-        System.out.println("null");
+        System.out.println();
     }
 
     public static void main(String[] args) {
         SinglyLinkedList list = new SinglyLinkedList();
-        list.insertAtEnd(10);
-        list.insertAtBeginning(20);
-        list.insertAtEnd(30);
-        list.insertAtBeginning(40);
 
-        list.printList(); // Output: 40 -> 20 -> 10 -> 30 -> null
+        list.insertAtEnd(1);
+        list.insertAtBeginning(2); // Corrected line
+        list.insertAtEnd(3);
+        list.insertAtEnd(4);
 
-        list.deleteNode(20);
+        System.out.println("Created Linked List: ");
+        list.printList();
 
-        list.printList(); // Output: 40 -> 10 -> 30 -> null
+        list.deleteNode(3);
+
+        System.out.println("\nLinked List after Deletion of 3: ");
+        list.printList();
     }
 }
